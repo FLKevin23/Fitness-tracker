@@ -4,8 +4,8 @@ import { getIngredients, createIngredient, updateIngredient, deleteIngredient } 
 import type { Ingredient } from '../types'
 
 const EMPTY: Omit<Ingredient, 'id'> = {
-  name: '', unit: 'g', kcal_per_100g: 0,
-  protein_per_100g: 0, carb_per_100g: 0, fat_per_100g: 0, notes: '',
+  name: '', unit: 'g', grams_per_unit: 1,
+  kcal_per_100g: 0, protein_per_100g: 0, carb_per_100g: 0, fat_per_100g: 0, notes: '',
 }
 
 function IngredientForm({
@@ -137,10 +137,11 @@ export default function Pantry() {
             <thead className="bg-gray-50 text-gray-500 text-xs uppercase tracking-wide">
               <tr>
                 <th className="text-left px-4 py-3">Name</th>
+                <th className="text-right px-4 py-3">Unit</th>
                 <th className="text-right px-4 py-3">kcal/100g</th>
-                <th className="text-right px-4 py-3">P</th>
-                <th className="text-right px-4 py-3">C</th>
-                <th className="text-right px-4 py-3">F</th>
+                <th className="text-right px-4 py-3">Protein</th>
+                <th className="text-right px-4 py-3">Carbs</th>
+                <th className="text-right px-4 py-3">Fat</th>
                 <th className="px-4 py-3"></th>
               </tr>
             </thead>
@@ -149,6 +150,9 @@ export default function Pantry() {
                 <>
                   <tr key={ing.id} className="hover:bg-gray-50">
                     <td className="px-4 py-3 font-medium">{ing.name}</td>
+                    <td className="px-4 py-3 text-right text-gray-400 text-xs">
+                      {ing.unit}{ing.grams_per_unit !== 1 ? ` (${ing.grams_per_unit}g)` : ''}
+                    </td>
                     <td className="px-4 py-3 text-right text-amber-600 font-semibold">{ing.kcal_per_100g}</td>
                     <td className="px-4 py-3 text-right text-gray-500">{ing.protein_per_100g}g</td>
                     <td className="px-4 py-3 text-right text-gray-500">{ing.carb_per_100g}g</td>

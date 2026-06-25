@@ -11,8 +11,18 @@ from routers import ingredients, meals, daily_log, food_entries, workouts, sport
 
 Base.metadata.create_all(bind=engine)
 
-from seed import seed_ingredients
+# Add grams_per_unit column to existing databases that predate it
+from sqlalchemy import text
+with engine.connect() as _conn:
+    try:
+        _conn.execute(text("ALTER TABLE ingredients ADD COLUMN grams_per_unit FLOAT DEFAULT 1.0"))
+        _conn.commit()
+    except Exception:
+        pass  # column already exists
+
+from seed import seed_ingredients, patch_ingredient_units
 seed_ingredients()
+patch_ingredient_units()
 
 app = FastAPI(title="Fitness Tracker API", version="1.0.0")
 

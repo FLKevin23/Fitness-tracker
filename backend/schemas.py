@@ -9,6 +9,7 @@ from pydantic import BaseModel
 class IngredientCreate(BaseModel):
     name: str
     unit: str = "g"
+    grams_per_unit: float = 1.0
     kcal_per_100g: float
     protein_per_100g: float = 0.0
     carb_per_100g: float = 0.0

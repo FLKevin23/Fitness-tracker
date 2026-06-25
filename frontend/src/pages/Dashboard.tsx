@@ -156,9 +156,9 @@ export default function Dashboard() {
             <NetBadge net={data.net_kcal} />
           </div>
           <div className="mt-3 pt-3 border-t grid grid-cols-3 gap-2 text-center text-sm">
-            <div><span className="text-xs text-gray-400">Protein</span><br /><strong>{data.macros.protein_g}g</strong></div>
-            <div><span className="text-xs text-gray-400">Carbs</span><br /><strong>{data.macros.carb_g}g</strong></div>
-            <div><span className="text-xs text-gray-400">Fat</span><br /><strong>{data.macros.fat_g}g</strong></div>
+            <div><span className="text-xs text-gray-400">Protein</span><br /><strong>{data.macros.protein_g} g</strong></div>
+            <div><span className="text-xs text-gray-400">Carbohydrates</span><br /><strong>{data.macros.carb_g} g</strong></div>
+            <div><span className="text-xs text-gray-400">Fat</span><br /><strong>{data.macros.fat_g} g</strong></div>
           </div>
         </div>
       )}

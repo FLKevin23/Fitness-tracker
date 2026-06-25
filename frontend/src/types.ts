@@ -2,6 +2,7 @@ export interface Ingredient {
   id: number
   name: string
   unit: string
+  grams_per_unit: number
   kcal_per_100g: number
   protein_per_100g: number
   carb_per_100g: number

@@ -25,6 +25,7 @@ class Ingredient(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String, unique=True, nullable=False)
     unit = Column(String, default="g")
+    grams_per_unit = Column(Float, default=1.0)   # e.g. 1 Ei = 55g, 1 EL = 14g
     kcal_per_100g = Column(Float, nullable=False)
     protein_per_100g = Column(Float, default=0.0)
     carb_per_100g = Column(Float, default=0.0)
