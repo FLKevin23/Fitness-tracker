@@ -11,6 +11,9 @@ from routers import ingredients, meals, daily_log, food_entries, workouts, sport
 
 Base.metadata.create_all(bind=engine)
 
+from seed import seed_ingredients
+seed_ingredients()
+
 app = FastAPI(title="Fitness Tracker API", version="1.0.0")
 
 app.add_middleware(
