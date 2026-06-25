@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import NavBar from './components/NavBar'
+import { Sidebar, BottomNav } from './components/NavBar'
 import Dashboard from './pages/Dashboard'
 import Pantry from './pages/Pantry'
 import Meals from './pages/Meals'
@@ -14,13 +14,14 @@ export default function App() {
         {/* Trainer view — no nav */}
         <Route path="/trainer/:token" element={<TrainerView />} />
 
-        {/* Main app with sidebar */}
+        {/* Main app */}
         <Route
           path="*"
           element={
-            <div className="flex min-h-screen">
-              <NavBar />
-              <main className="flex-1 overflow-auto">
+            <div className="flex min-h-screen bg-gray-50">
+              <Sidebar />
+              {/* pb-20 on mobile so content clears the bottom nav */}
+              <main className="flex-1 overflow-auto pb-20 lg:pb-0">
                 <Routes>
                   <Route path="/" element={<Dashboard />} />
                   <Route path="/pantry" element={<Pantry />} />
@@ -29,6 +30,7 @@ export default function App() {
                   <Route path="/profile" element={<ProfilePage />} />
                 </Routes>
               </main>
+              <BottomNav />
             </div>
           }
         />

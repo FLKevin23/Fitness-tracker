@@ -54,7 +54,7 @@ export default function ProfilePage() {
   const set = (k: keyof typeof form, v: string) => setForm(f => ({ ...f, [k]: v }))
 
   return (
-    <div className="p-6 max-w-2xl mx-auto space-y-6">
+    <div className="p-4 md:p-6 max-w-2xl mx-auto space-y-4">
       <h1 className="text-2xl font-bold">Profile & Settings</h1>
 
       {/* Profile form */}

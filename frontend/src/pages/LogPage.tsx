@@ -83,7 +83,7 @@ export default function LogPage() {
   ]
 
   return (
-    <div className="p-6 max-w-xl mx-auto space-y-5">
+    <div className="p-4 md:p-6 max-w-xl mx-auto space-y-4">
       <h1 className="text-2xl font-bold">Log Entry</h1>
 
       <div>
