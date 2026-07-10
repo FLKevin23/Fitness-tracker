@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { getProfile, updateProfile, getTrainerTokens, createTrainerToken, deactivateTrainerToken } from '../api/client'
+import type { ActivityLevel } from '../types'
 
 export default function ProfilePage() {
   const qc = useQueryClient()
@@ -8,7 +9,8 @@ export default function ProfilePage() {
   const { data: tokens = [] } = useQuery({ queryKey: ['trainer-tokens'], queryFn: getTrainerTokens })
 
   const [form, setForm] = useState({
-    name: '', gender: '', height_cm: '', birth_date: '', goal_kcal_deficit: '',
+    name: '', gender: '', height_cm: '', birth_date: '',
+    body_fat_percentage: '', activity_level: 'sedentary', goal_kcal_deficit: '',
   })
   const [saved, setSaved] = useState(false)
 
@@ -19,6 +21,8 @@ export default function ProfilePage() {
         gender: profile.gender ?? '',
         height_cm: profile.height_cm?.toString() ?? '',
         birth_date: profile.birth_date ?? '',
+        body_fat_percentage: profile.body_fat_percentage?.toString() ?? '',
+        activity_level: profile.activity_level ?? 'sedentary',
         goal_kcal_deficit: profile.goal_kcal_deficit?.toString() ?? '',
       })
     }
@@ -30,6 +34,8 @@ export default function ProfilePage() {
       gender: form.gender || undefined,
       height_cm: form.height_cm ? parseFloat(form.height_cm) : undefined,
       birth_date: form.birth_date || undefined,
+      body_fat_percentage: form.body_fat_percentage ? parseFloat(form.body_fat_percentage) : undefined,
+      activity_level: (form.activity_level || undefined) as ActivityLevel | undefined,
       goal_kcal_deficit: form.goal_kcal_deficit ? parseFloat(form.goal_kcal_deficit) : undefined,
     }),
     onSuccess: () => {
@@ -89,6 +95,23 @@ export default function ProfilePage() {
               className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" />
           </div>
           <div>
+            <label className="block text-xs text-gray-500 mb-1">Body fat %</label>
+            <input type="number" step="0.1" value={form.body_fat_percentage} onChange={e => set('body_fat_percentage', e.target.value)}
+              placeholder="e.g. 16"
+              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" />
+          </div>
+          <div>
+            <label className="block text-xs text-gray-500 mb-1">Daily activity level</label>
+            <select value={form.activity_level} onChange={e => set('activity_level', e.target.value)}
+              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+              <option value="sedentary">Sedentary — desk job, no regular commute activity</option>
+              <option value="light">Light — walking/biking commute or on your feet sometimes</option>
+              <option value="moderate">Moderate — on-your-feet job or lots of daily movement</option>
+              <option value="active">Active — physically demanding job or daily training</option>
+              <option value="very_active">Very active — physically demanding job and daily training</option>
+            </select>
+          </div>
+          <div>
             <label className="block text-xs text-gray-500 mb-1">Calorie deficit goal (kcal/day)</label>
             <input type="number" value={form.goal_kcal_deficit} onChange={e => set('goal_kcal_deficit', e.target.value)}
               className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" />
@@ -102,7 +125,11 @@ export default function ProfilePage() {
           {saved && <span className="text-green-600 text-sm">Saved!</span>}
         </div>
         <p className="text-xs text-gray-400">
-          BMR is calculated from body weight (logged daily), height, age and gender using the Mifflin-St Jeor formula.
+          BMR uses the Katch-McArdle formula (lean body mass, from body fat %) when body fat % is set — more accurate
+          for muscular builds than weight-only formulas. Without body fat %, it falls back to Mifflin-St Jeor
+          (weight, height, age, gender). Your daily activity level then scales BMR up into TDEE, the number actually
+          used for your calorie budget — this is what accounts for commuting, being on your feet at work, etc.,
+          separately from logged workouts.
         </p>
       </form>
 

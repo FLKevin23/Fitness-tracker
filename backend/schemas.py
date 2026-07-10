@@ -140,6 +140,8 @@ class UserProfileUpdate(BaseModel):
     gender: Optional[str] = None
     height_cm: Optional[float] = None
     birth_date: Optional[datetime.date] = None
+    body_fat_percentage: Optional[float] = None
+    activity_level: Optional[str] = None
     goal_kcal_deficit: Optional[float] = None
 
 class UserProfileRead(BaseModel):
@@ -148,6 +150,8 @@ class UserProfileRead(BaseModel):
     gender: Optional[str]
     height_cm: Optional[float]
     birth_date: Optional[datetime.date]
+    body_fat_percentage: Optional[float]
+    activity_level: Optional[str]
     goal_kcal_deficit: Optional[float]
     model_config = {"from_attributes": True}
 
@@ -183,6 +187,7 @@ class DailySummaryRead(BaseModel):
     sport_kcal: int
     burned_kcal: int
     bmr: Optional[int]
+    tdee: Optional[int]
     net_kcal: Optional[int]
     macros: MacroRead
     food_entries: List[FoodEntryRead]

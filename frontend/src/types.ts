@@ -72,6 +72,7 @@ export interface DailySummary {
   sport_kcal: number
   burned_kcal: number
   bmr?: number
+  tdee?: number
   net_kcal?: number
   macros: Macros
   food_entries: FoodEntry[]
@@ -79,12 +80,16 @@ export interface DailySummary {
   sport_nutrition: SportNutrition[]
 }
 
+export type ActivityLevel = 'sedentary' | 'light' | 'moderate' | 'active' | 'very_active'
+
 export interface UserProfile {
   id: number
   name?: string
   gender?: string
   height_cm?: number
   birth_date?: string
+  body_fat_percentage?: number
+  activity_level?: ActivityLevel
   goal_kcal_deficit?: number
 }
 

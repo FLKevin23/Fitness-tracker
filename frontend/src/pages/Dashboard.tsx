@@ -68,8 +68,8 @@ export default function Dashboard() {
   if (isLoading) return <div className="p-6 text-gray-400">Loading…</div>
   if (!data) return null
 
-  const goalKcal = data.bmr
-    ? Math.max(0, data.bmr - (data.goal_kcal_deficit ?? 500) + data.burned_kcal)
+  const goalKcal = data.tdee
+    ? Math.max(0, data.tdee - (data.goal_kcal_deficit ?? 500) + data.burned_kcal)
     : undefined
 
   const timeGroups = ['breakfast', 'lunch', 'dinner', 'snack']
@@ -135,15 +135,16 @@ export default function Dashboard() {
       </div>
 
       {/* Calorie breakdown */}
-      {data.bmr && (
+      {data.tdee && (
         <div className="bg-white rounded-2xl shadow-sm p-4">
           <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Breakdown</h2>
-          <div className="grid grid-cols-4 gap-2 text-center">
+          <div className="grid grid-cols-5 gap-2 text-center">
             {[
               { label: 'Food',       val: data.food_kcal,   color: 'text-amber-600' },
               { label: 'Sport fuel', val: data.sport_kcal,  color: 'text-orange-500' },
               { label: 'Burned',     val: -data.burned_kcal,color: 'text-green-600' },
-              { label: 'BMR',        val: -data.bmr,        color: 'text-purple-600' },
+              { label: 'BMR',        val: -(data.bmr ?? 0), color: 'text-purple-600' },
+              { label: 'TDEE',       val: -data.tdee,       color: 'text-indigo-600' },
             ].map(({ label, val, color }) => (
               <div key={label}>
                 <p className="text-[10px] text-gray-400 uppercase leading-tight mb-0.5">{label}</p>

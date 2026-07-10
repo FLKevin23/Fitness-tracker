@@ -63,11 +63,20 @@ def trainer_view(token: str, db: Session = Depends(get_db)):
         food_entries = []
         for entry in log.food_entries:
             base_kcal = meal_kcal(entry.meal.ingredients)
+            ingredients = [
+                {
+                    "name": mi.ingredient.name,
+                    "raw_weight_g": round(mi.raw_weight_g * entry.portion_multiplier, 1),
+                    "kcal": round(mi.ingredient.kcal_per_100g * mi.raw_weight_g * entry.portion_multiplier / 100, 1),
+                }
+                for mi in entry.meal.ingredients
+            ]
             food_entries.append({
                 "meal_name": entry.meal.name,
                 "meal_time": entry.meal_time,
                 "portion_multiplier": entry.portion_multiplier,
                 "kcal": round(base_kcal * entry.portion_multiplier, 1),
+                "ingredients": ingredients,
             })
         result.append({
             "date": date.isoformat(),
@@ -82,6 +91,15 @@ def trainer_view(token: str, db: Session = Depends(get_db)):
                     "kcal_burned": w.kcal_burned,
                 }
                 for w in log.workouts
+            ],
+            "sport_nutrition": [
+                {
+                    "product_name": sn.product_name,
+                    "amount_g_or_ml": sn.amount_g_or_ml,
+                    "kcal": sn.kcal,
+                    "carb_g": sn.carb_g,
+                }
+                for sn in log.sport_nutrition
             ],
             **computed,
         })

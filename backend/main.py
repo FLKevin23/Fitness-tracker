@@ -20,6 +20,20 @@ with engine.connect() as _conn:
     except Exception:
         pass  # column already exists
 
+# Add body composition / activity columns to existing databases that predate them
+with engine.connect() as _conn:
+    try:
+        _conn.execute(text("ALTER TABLE user_profile ADD COLUMN body_fat_percentage FLOAT"))
+        _conn.commit()
+    except Exception:
+        pass  # column already exists
+with engine.connect() as _conn:
+    try:
+        _conn.execute(text("ALTER TABLE user_profile ADD COLUMN activity_level VARCHAR DEFAULT 'sedentary'"))
+        _conn.commit()
+    except Exception:
+        pass  # column already exists
+
 from seed import seed_ingredients, patch_ingredient_units
 seed_ingredients()
 patch_ingredient_units()

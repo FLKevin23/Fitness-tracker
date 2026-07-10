@@ -14,6 +14,8 @@ class UserProfile(Base):
     gender = Column(String, nullable=True)          # "male" | "female"
     height_cm = Column(Float, nullable=True)
     birth_date = Column(Date, nullable=True)         # for age → BMR
+    body_fat_percentage = Column(Float, nullable=True)   # enables Katch-McArdle BMR
+    activity_level = Column(String, default="sedentary")  # sedentary|light|moderate|active|very_active
     goal_kcal_deficit = Column(Float, default=500)
     strava_access_token = Column(String, nullable=True)
     strava_refresh_token = Column(String, nullable=True)

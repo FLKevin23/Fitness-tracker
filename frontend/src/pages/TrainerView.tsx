@@ -10,9 +10,18 @@ interface DayData {
   sport_kcal: number
   burned_kcal: number
   bmr?: number
+  tdee?: number
   net_kcal?: number
-  food_entries: { meal_name: string; meal_time?: string; portion_multiplier: number; kcal: number }[]
+  macros: { protein_g: number; carb_g: number; fat_g: number }
+  food_entries: {
+    meal_name: string
+    meal_time?: string
+    portion_multiplier: number
+    kcal: number
+    ingredients: { name: string; raw_weight_g: number; kcal: number }[]
+  }[]
   workouts: { activity_type?: string; duration_min?: number; distance_km?: number; kcal_burned?: number }[]
+  sport_nutrition: { product_name: string; amount_g_or_ml: number; kcal: number; carb_g?: number }[]
 }
 
 export default function TrainerView() {
@@ -53,11 +62,12 @@ export default function TrainerView() {
           </div>
 
           {/* Calorie summary */}
-          <div className="grid grid-cols-4 gap-2 text-center text-sm">
+          <div className="grid grid-cols-5 gap-2 text-center text-sm">
             {[
               { label: 'Food', val: day.food_kcal, color: 'text-amber-600' },
               { label: 'Burned', val: day.burned_kcal, color: 'text-green-600' },
               { label: 'BMR', val: day.bmr, color: 'text-purple-600' },
+              { label: 'TDEE', val: day.tdee, color: 'text-indigo-600' },
               { label: 'Net', val: day.net_kcal, color: day.net_kcal != null && day.net_kcal < 0 ? 'text-green-600' : 'text-red-500' },
             ].map(({ label, val, color }) => val != null ? (
               <div key={label} className="bg-gray-50 rounded-lg py-2">
@@ -67,18 +77,39 @@ export default function TrainerView() {
             ) : null)}
           </div>
 
+          {/* Macros */}
+          {day.macros && (
+            <div className="grid grid-cols-3 gap-2 text-center text-sm">
+              <div><span className="text-xs text-gray-400">Protein</span><br /><strong>{day.macros.protein_g} g</strong></div>
+              <div><span className="text-xs text-gray-400">Carbs</span><br /><strong>{day.macros.carb_g} g</strong></div>
+              <div><span className="text-xs text-gray-400">Fat</span><br /><strong>{day.macros.fat_g} g</strong></div>
+            </div>
+          )}
+
           {/* Food */}
           {day.food_entries.length > 0 && (
             <div>
               <p className="text-xs text-gray-400 uppercase font-medium mb-1">Food</p>
               {day.food_entries.map((e, i) => (
-                <div key={i} className="flex justify-between text-sm py-0.5">
-                  <span className="text-gray-700 capitalize">
-                    {e.meal_time && <span className="text-gray-400">{e.meal_time} · </span>}
-                    {e.meal_name}
-                    {e.portion_multiplier !== 1 && <span className="text-gray-400"> ×{e.portion_multiplier}</span>}
-                  </span>
-                  <span className="text-amber-600 font-medium">{Math.round(e.kcal)} kcal</span>
+                <div key={i} className="py-0.5">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-700 capitalize">
+                      {e.meal_time && <span className="text-gray-400">{e.meal_time} · </span>}
+                      {e.meal_name}
+                      {e.portion_multiplier !== 1 && <span className="text-gray-400"> ×{e.portion_multiplier}</span>}
+                    </span>
+                    <span className="text-amber-600 font-medium">{Math.round(e.kcal)} kcal</span>
+                  </div>
+                  {e.ingredients.length > 0 && (
+                    <div className="pl-3 mt-0.5 space-y-0.5">
+                      {e.ingredients.map((ing, j) => (
+                        <div key={j} className="flex justify-between text-xs text-gray-400">
+                          <span>{ing.name} · {ing.raw_weight_g}g</span>
+                          <span>{Math.round(ing.kcal)} kcal</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -98,6 +129,22 @@ export default function TrainerView() {
                   {w.kcal_burned && (
                     <span className="text-green-600 font-medium">-{w.kcal_burned} kcal</span>
                   )}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Sport fuel */}
+          {day.sport_nutrition.length > 0 && (
+            <div>
+              <p className="text-xs text-gray-400 uppercase font-medium mb-1">Sport Fuel</p>
+              {day.sport_nutrition.map((sn, i) => (
+                <div key={i} className="flex justify-between text-sm py-0.5">
+                  <span className="text-gray-700">
+                    {sn.product_name}
+                    {sn.amount_g_or_ml && ` · ${sn.amount_g_or_ml}g`}
+                  </span>
+                  <span className="text-orange-500 font-medium">{sn.kcal} kcal</span>
                 </div>
               ))}
             </div>
